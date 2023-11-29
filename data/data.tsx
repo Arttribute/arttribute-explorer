@@ -26,46 +26,33 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "backlog",
-    label: "Backlog",
-    icon: QuestionMarkCircledIcon,
-  },
-  {
-    value: "todo",
-    label: "Todo",
-    icon: CircleIcon,
-  },
-  {
     value: "in progress",
-    label: "In Progress",
+    label: "Pending",
     icon: StopwatchIcon,
   },
   {
     value: "done",
-    label: "Done",
+    label: "Accepted",
     icon: CheckCircledIcon,
   },
   {
     value: "canceled",
-    label: "Canceled",
+    label: "Denied",
     icon: CrossCircledIcon,
   },
 ];
 
 export const priorities = [
   {
-    label: "Low",
+    label: "Art Place",
     value: "low",
-    icon: ArrowDownIcon,
   },
   {
-    label: "Medium",
+    label: "Arttribute Studio",
     value: "medium",
-    icon: ArrowRightIcon,
   },
   {
-    label: "High",
+    label: "Vokali",
     value: "high",
-    icon: ArrowUpIcon,
   },
 ];

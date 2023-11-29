@@ -24,7 +24,7 @@ async function getTasks() {
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Arttribute",
+  title: "Arttribute Explorer",
   description:
     "Arttribute enables fair and transaparent use of art in the realm of genereative AI",
 };
@@ -64,9 +64,12 @@ export default async function DashboardPage() {
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Track how your work is being used
+            </h2>
             <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
+              Enter your Item&apos;s or Collection&apos;s id to see all
+              attributions
             </p>
           </div>
           <div className="flex items-center space-x-2">
