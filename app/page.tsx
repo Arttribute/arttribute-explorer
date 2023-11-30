@@ -1,3 +1,4 @@
+// "use client";
 import { Metadata } from "next";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
@@ -11,6 +12,23 @@ import { columns } from "@/components/columns";
 import { DataTable } from "@/components/data-table";
 import { UserNav } from "@/components/user-nav";
 import { taskSchema } from "../data/schema";
+import Cookie from "js-cookie";
+import ky from "ky";
+
+const apiURL = process.env.NEXT_PUBLIC_API_ENDPOINT || "http://localhost:5000";
+const api = ky.extend({
+  prefixUrl: apiURL,
+  hooks: {
+    beforeRequest: [
+      (request) => {
+        const accessToken = Cookie.get("accessToken");
+        if (accessToken) {
+          request.headers.set("Authorization", `Bearer ${accessToken}`);
+        }
+      },
+    ],
+  },
+});
 
 // Simulate a database read for tasks.
 async function getTasks() {
@@ -18,10 +36,56 @@ async function getTasks() {
 
   const tasks = JSON.parse(data.toString());
 
+  const results = await Promise.allSettled([
+    api.get("v1/certificates", {}).json<any>(),
+    api.get("v1/requests/received", {}).json<any>(),
+  ]);
+
+  const [certificates, requests] = map(results, (res) => {
+    if (res.status == "fulfilled") {
+      //   console.log(res.value);
+      return res.value;
+    }
+    // console.log(res);
+  });
+
+  const sortedCerts = sortBy(
+    map(certificates ?? [], (cert) => {
+      cert = mapKeys(cert, (value, key) => {
+        if (key == "description") {
+          return "title";
+        }
+        return key;
+      });
+      cert = mapValues(cert, (value, key) => {
+        if (key == "id") {
+          return value.split("-")[0];
+        }
+        return value;
+      });
+      return merge(cert, { status: "", label: "", priority: "" });
+    }),
+    (event) => {
+      return new Date(event.created);
+    }
+  );
+  console.log(sortedCerts);
+
+  return sortedCerts;
+
   return z.array(taskSchema).parse(tasks);
 }
 
 import Link from "next/link";
+import {
+  compact,
+  flatMap,
+  map,
+  mapKeys,
+  mapValues,
+  merge,
+  sortBy,
+} from "lodash";
 
 export const metadata: Metadata = {
   title: "Arttribute Explorer",
